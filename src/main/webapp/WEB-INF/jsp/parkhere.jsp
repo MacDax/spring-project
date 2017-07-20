@@ -65,7 +65,7 @@
 <script>
   function myMap() {
 	  var map = new google.maps.Map(document.getElementById("googleMap"), {
-			zoom: 12,
+			zoom: 16,
 			center: {lat:37.78229410000001, lng:-122.4158954}         
 		});
 	getParkingLotValues(map);
@@ -81,21 +81,7 @@ function getParkingLotValues(map) {
 	console.log(${parkingLots});
 	var newData=JSON.stringify(${parkingLots}); 
 	var parkingLotObj = JSON.parse(newData);
-	
-	var image = {
-		    url: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-		    // This marker is 20 pixels wide by 32 pixels high.
-		    size: new google.maps.Size(20, 32),
-		    // The origin for this image is (0, 0).
-		    origin: new google.maps.Point(0, 0),
-		    // The anchor for this image is the base of the flagpole at (0, 32).
-		    anchor: new google.maps.Point(0, 32)
-		  };
-	
-	var shape = {
-		    coords: [1, 1, 1, 20, 18, 20, 18, 1],
-		    type: 'poly'
-		  };
+	var image = 'https://maps.google.com/mapfiles/kml/shapes/parking_lot_maps.png';
 	
 	for(var i in parkingLotObj.parkingPlaces) {
 		console.log(parkingLotObj.parkingPlaces[i].name + " lat " + parkingLotObj.parkingPlaces[i].lat);
@@ -103,7 +89,6 @@ function getParkingLotValues(map) {
 		var floatLat = parseFloat(parkingLotObj.parkingPlaces[i].lat);
 		var floatLng = parseFloat(parkingLotObj.parkingPlaces[i].lng);
 		var marker = new google.maps.Marker({
-			 //position: new google.maps.LatLng(parkingLotObj.parkingPlaces[i].lat, parkingLotObj.parkingPlaces[i].lng),
 			 position: {lat: parkingLotObj.parkingPlaces[i].lat, lng: parkingLotObj.parkingPlaces[i].lng},
 			 map: map,
 			 icon: image

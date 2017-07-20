@@ -73,17 +73,18 @@ public class WelcomeController {
 		System.out.println("whereto " + userDestination);
 		ParkingLots parkingLots = new ParkingLots();
 		List<ParkingPlace> parkingLotList = new ArrayList<>();
-		//GeocodingResult[] results = googlePlaceService.getGeoCodingResult(userDestination);
-		GeoApiContext context = new GeoApiContext().setApiKey("AIzaSyD_yBCEbeHzr6T71GroPsjXsApSNfjEems");
-		GeocodingResult[] results =  GeocodingApi.geocode(context,  userDestination).await();  
+		GeocodingResult[] results = googlePlaceService.getGeoCodingResult(userDestination);
+		/*GeoApiContext context = new GeoApiContext().setApiKey("AIzaSyD_yBCEbeHzr6T71GroPsjXsApSNfjEems");
+		GeocodingResult[] results =  GeocodingApi.geocode(context,  userDestination).await();*/  
 		LatLng latLang = results[0].geometry.location;
 		String address = results[0].formattedAddress;
 		System.out.println(address);
-		NearbySearchRequest nearBySearchRequest = PlacesApi.nearbySearchQuery(context, latLang); 
+		/*NearbySearchRequest nearBySearchRequest = PlacesApi.nearbySearchQuery(context, latLang); 
 		nearBySearchRequest.radius(200);
 		nearBySearchRequest.type(PlaceType.PARKING);
 		PlacesSearchResponse placesSearchResponse = nearBySearchRequest.await();
-		PlacesSearchResult[] placesResult = placesSearchResponse.results;
+		PlacesSearchResult[] placesResult = placesSearchResponse.results;*/
+		PlacesSearchResult[] placesResult = googlePlaceService.getNearBySearchResponse(latLang);
 		System.out.println("lots list : " + placesResult.length);
 		for(int i=0; i<placesResult.length; i++) {
 			ParkingPlace parkingLot = new ParkingPlace();
@@ -91,16 +92,13 @@ public class WelcomeController {
 			parkingLot.setName(placesResult[i].name);
 			parkingLot.setLat(placesResult[i].geometry.location.lat);
 			parkingLot.setLng(placesResult[i].geometry.location.lng);
+			
 			parkingLotList.add(parkingLot);
 		}
 		
 		parkingLots.setParkingPlaces(parkingLotList);
-		
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonParkingLots = mapper.writeValueAsString(parkingLots);
-		
-		
-		//model.addAttribute("parkingPlace", parkingPlace);
 		model.addAttribute("parkingLotsList", parkingLotList);
 		model.addAttribute("jsonParkingLots", jsonParkingLots);
 		
