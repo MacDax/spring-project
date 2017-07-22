@@ -91,6 +91,7 @@ function getParkingLotValues(map) {
 		var marker = new google.maps.Marker({
 			 position: {lat: parkingLotObj.parkingPlaces[i].lat, lng: parkingLotObj.parkingPlaces[i].lng},
 			 map: map,
+			// center: {lat:37.78229410000001, lng:-122.4158954}
 			 icon: image
 		 }); 
 	}
