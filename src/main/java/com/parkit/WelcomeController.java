@@ -33,6 +33,7 @@ import com.parkit.domain.ParkingPlace;
 import com.parkit.domain.UsersSerachCriteria;
 import com.parkit.service.GooglePlaceAPIService;
 import com.parkit.service.SfmtaAPIService;
+import com.parkit.service.SoCrataAPIService;
 
 //import com.google.maps.GeoApiContext;
 @Controller
@@ -50,11 +51,13 @@ public class WelcomeController {
 	GooglePlaceAPIService googlePlaceService;
 	@Autowired 
 	SfmtaAPIService sfmtaPlaceService;
+	@Autowired
+	SoCrataAPIService socrataService;
 	
 	@RequestMapping("/")
 	public String welcome(Model model) {
 		model.addAttribute("usersSerachCriteria", new UsersSerachCriteria());
-		
+		socrataService.getParkingMetersInSFO();
 		return "welcome";
 	}
 

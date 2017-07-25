@@ -66,7 +66,8 @@
   function myMap() {
 	  var map = new google.maps.Map(document.getElementById("googleMap"), {
 			zoom: 16,
-			center: {lat:37.78229410000001, lng:-122.4158954}         
+			center: {lat:37.78229410000001, lng:-122.4158954}
+			//center: {lat:"{$lati}", lng:"{$lngi}"}
 		});
 	getParkingLotValues(map);
 /* var myCenter = new google.maps.LatLng("${lati}", "${lngi}");
@@ -91,7 +92,7 @@ function getParkingLotValues(map) {
 		var marker = new google.maps.Marker({
 			 position: {lat: parkingLotObj.parkingPlaces[i].lat, lng: parkingLotObj.parkingPlaces[i].lng},
 			 map: map,
-			// center: {lat:37.78229410000001, lng:-122.4158954}
+			 //center: {lat:parkingLotObj.parkingPlaces[i].lat, lng:-parkingLotObj.parkingPlaces[i].lng}
 			 icon: image
 		 }); 
 	}
