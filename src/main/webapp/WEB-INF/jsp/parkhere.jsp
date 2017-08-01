@@ -35,14 +35,16 @@
 	</nav>
 
 	<div class="container">
-
+    <div class="row">
 		<div class="starter-template">
+		<div class="col-sm-2">
 		<h3>Destination: </h3>
 		<h3>Destination: ${usersSerachCriteria.getWhereto()}</h3>
-		<%-- <c:out value='${jsonParkingLots}' /> --%>
+		<!--<c:out value='${jsonParkingLots}' />-->
 		<%-- String json = '${jsonParkingLots}';
 		String parsedJson = JSON.parse(json); --%>
 		<c:set var="parkingLots" value = '${jsonParkingLots}' />
+		<!--<c:set var="parkingLots" value = '${parkingLotsList}' />-->
 		<c:if test="${fn:length(parkingLotsList) eq 0 }" >
 			<h4> No nearby parking places found. </h4>
 		</c:if>
@@ -50,18 +52,21 @@
 		<c:if test= "${fn:length(parkingLotsList) gt 0}"> 
         <c:set var="noOfParkingPlaces" value = "${fn:length(parkingLotsList)}" />
 		<c:forEach var="index" items="${parkingLotsList}">
-		<c:out value='${index.name}' /><br />
+		<c:out value='${index.streetName}' /><br />
 		<%-- <c:out value='${index.lat}' />
 		<c:out value='${index.lng }' /> --%>
-		<c:set var="lati" value = '${index.lat}' />
-		<c:set var="lngi" value = '${index.lng}' />
+		<%-- <c:set var="lati" value = '${index.lat}' />
+		<c:set var="lngi" value = '${index.lng}' /> --%>
 		
 	</c:forEach>
 </c:if>
 </div>
+</div>
 		
-		
+		<div class="col-sm-10">
 		<div id="googleMap" style="height:400px;width:100%;"></div>
+		</div>
+		</div>
 <script>
   function myMap() {
 	  var map = new google.maps.Map(document.getElementById("googleMap"), {
@@ -79,9 +84,11 @@ marker.setMap(map); */
 
 function getParkingLotValues(map) {
 	console.log(" Log ");
-	console.log(${parkingLots});
-	var newData=JSON.stringify(${parkingLots}); 
-	var parkingLotObj = JSON.parse(newData);
+	//console.log(${parkingLots});
+	console.lg('${jsonParkingLots}');
+	//var newData=JSON.stringify(${parkingLots}); 
+	//var parkingLotObj = JSON.parse(newData);
+	var parkingLotObj = JSON.parse('${jsonParkingLots}');
 	var image = 'https://maps.google.com/mapfiles/kml/shapes/parking_lot_maps.png';
 	
 	for(var i in parkingLotObj.parkingPlaces) {

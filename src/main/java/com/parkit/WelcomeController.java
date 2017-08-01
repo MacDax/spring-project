@@ -29,9 +29,12 @@ import com.google.maps.model.PlaceType;
 import com.google.maps.model.PlacesSearchResponse;
 import com.google.maps.model.PlacesSearchResult;
 import com.parkit.domain.ParkingLots;
+import com.parkit.domain.ParkingMetersSFO;
 import com.parkit.domain.ParkingPlace;
+import com.parkit.domain.SFOParkingMetersList;
 import com.parkit.domain.UsersSerachCriteria;
 import com.parkit.service.GooglePlaceAPIService;
+import com.parkit.service.ReadSFOParkingMetersSchedule;
 import com.parkit.service.SfmtaAPIService;
 import com.parkit.service.SoCrataAPIService;
 
@@ -53,11 +56,15 @@ public class WelcomeController {
 	SfmtaAPIService sfmtaPlaceService;
 	@Autowired
 	SoCrataAPIService socrataService;
+	@Autowired
+	ReadSFOParkingMetersSchedule parkingMetersReader;
+	@Autowired
+	SFOParkingMetersList sfoParkingMeters;
 	
 	@RequestMapping("/")
 	public String welcome(Model model) {
 		model.addAttribute("usersSerachCriteria", new UsersSerachCriteria());
-		socrataService.getParkingMetersInSFO();
+		//socrataService.getParkingMetersInSFO();
 		return "welcome";
 	}
 
@@ -81,7 +88,10 @@ public class WelcomeController {
 		List<ParkingPlace> parkingLotList = new ArrayList<>();
 		GeocodingResult[] results = googlePlaceService.getGeoCodingResult(userDestination);
 		LatLng latLang = results[0].geometry.location;
-		PlacesSearchResult[] placesResult = googlePlaceService.getNearBySearchResponse(latLang);
+		System.out.println("lat lang : " + latLang.toString());
+		//System.out.println("address " + results[0].formattedAddress);
+		//System.out.println("add comp : " + results[0].addressComponents[0].longName);
+		/*PlacesSearchResult[] placesResult = googlePlaceService.getNearBySearchResponse(latLang);
 		for(int i=0; i<placesResult.length; i++) {
 			ParkingPlace parkingLot = new ParkingPlace();
 			parkingLot.setAddressLine1(userDestination);
@@ -94,8 +104,17 @@ public class WelcomeController {
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonParkingLots = mapper.writeValueAsString(parkingLots);
 		model.addAttribute("parkingLotsList", parkingLotList);
+		model.addAttribute("jsonParkingLots", jsonParkingLots);*/
+		//sfmtaPlaceService.getParkingDataWithPrice();
+		System.out.println("short  : " + results[0].addressComponents[0].shortName + "  long " +  results[0].addressComponents[0].longName + " addr " + results[0].formattedAddress );
+		List<ParkingMetersSFO> SFOParkingMetersList = parkingMetersReader.formatInputParameter(results[0].formattedAddress, latLang);
+		ObjectMapper mapper = new ObjectMapper();
+		sfoParkingMeters.setParkingPlaces(SFOParkingMetersList);
+		String jsonParkingLots = mapper.writeValueAsString(sfoParkingMeters);
+		//parkingMetersReader.readFile(results[0].addressComponents[0].longName);
+		System.out.println("json " + jsonParkingLots);
+		model.addAttribute("parkingLotsList", SFOParkingMetersList);
 		model.addAttribute("jsonParkingLots", jsonParkingLots);
-		sfmtaPlaceService.getParkingDataWithPrice();
 		return "/parkhere";
 	}
 	
