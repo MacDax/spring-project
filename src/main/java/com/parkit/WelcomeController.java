@@ -32,16 +32,16 @@ import com.parkit.domain.ParkingLots;
 import com.parkit.domain.ParkingMetersSFO;
 import com.parkit.domain.ParkingPlace;
 import com.parkit.domain.SFOParkingMetersList;
+import com.parkit.domain.SFParkingMeter;
 import com.parkit.domain.UsersSerachCriteria;
 import com.parkit.service.GooglePlaceAPIService;
 import com.parkit.service.ReadSFOParkingMetersSchedule;
 import com.parkit.service.SfmtaAPIService;
 import com.parkit.service.SoCrataAPIService;
 
-//import com.google.maps.GeoApiContext;
+
 @Controller
 public class WelcomeController {
-
 	// inject via application.properties
 	@Value("${welcome.message:test}")
 	private String message = "Hello World";
@@ -61,58 +61,25 @@ public class WelcomeController {
 	@Autowired
 	SFOParkingMetersList sfoParkingMeters;
 	
-	@RequestMapping("/")
+	@RequestMapping("/parkompass")
 	public String welcome(Model model) {
 		model.addAttribute("usersSerachCriteria", new UsersSerachCriteria());
 		//socrataService.getParkingMetersInSFO();
 		return "welcome";
 	}
 
-	/*@RequestMapping(value="/parkhere", method=RequestMethod.POST)
-	public String parkHere(@RequestParam("whereto") String whereto, Model model) throws ApiException, InterruptedException, IOException {
-		model.addAttribute("where", whereto);
-		return "/parkhere";
-	}*/
 	
-	/*@RequestMapping(value = "/", method=RequestMethod.GET)
-	public ModelAndView welcome() {
-		parkingPlace = new ParkingPlace();
-		ModelAndView model = new ModelAndView("welcome", "parkingPlace", parkingPlace);
-		return model;
-	}*/
 	
 	@RequestMapping(value="/parkhere", method=RequestMethod.POST)
 	public String submit(@ModelAttribute("usersSerachCriteria")UsersSerachCriteria usersSerachCriteria, Model model) throws ApiException, InterruptedException, IOException {
 		String userDestination = usersSerachCriteria.getWhereto();
-		ParkingLots parkingLots = new ParkingLots();
-		List<ParkingPlace> parkingLotList = new ArrayList<>();
 		GeocodingResult[] results = googlePlaceService.getGeoCodingResult(userDestination);
 		LatLng latLang = results[0].geometry.location;
-		System.out.println("lat lang : " + latLang.toString());
-		//System.out.println("address " + results[0].formattedAddress);
-		//System.out.println("add comp : " + results[0].addressComponents[0].longName);
-		/*PlacesSearchResult[] placesResult = googlePlaceService.getNearBySearchResponse(latLang);
-		for(int i=0; i<placesResult.length; i++) {
-			ParkingPlace parkingLot = new ParkingPlace();
-			parkingLot.setAddressLine1(userDestination);
-			parkingLot.setName(placesResult[i].name);
-			parkingLot.setLat(placesResult[i].geometry.location.lat);
-			parkingLot.setLng(placesResult[i].geometry.location.lng);
-			parkingLotList.add(parkingLot);
-		}
-		parkingLots.setParkingPlaces(parkingLotList);
-		ObjectMapper mapper = new ObjectMapper();
-		String jsonParkingLots = mapper.writeValueAsString(parkingLots);
-		model.addAttribute("parkingLotsList", parkingLotList);
-		model.addAttribute("jsonParkingLots", jsonParkingLots);*/
-		//sfmtaPlaceService.getParkingDataWithPrice();
-		System.out.println("short  : " + results[0].addressComponents[0].shortName + "  long " +  results[0].addressComponents[0].longName + " addr " + results[0].formattedAddress );
-		List<ParkingMetersSFO> SFOParkingMetersList = parkingMetersReader.formatInputParameter(results[0].formattedAddress, latLang);
+		//List<ParkingMetersSFO> SFOParkingMetersList = parkingMetersReader.formatInputParameter(results[0].formattedAddress, latLang);
+		List<SFParkingMeter> SFOParkingMetersList = parkingMetersReader.getParkingMeters(userDestination, latLang);
 		ObjectMapper mapper = new ObjectMapper();
 		sfoParkingMeters.setParkingPlaces(SFOParkingMetersList);
 		String jsonParkingLots = mapper.writeValueAsString(sfoParkingMeters);
-		//parkingMetersReader.readFile(results[0].addressComponents[0].longName);
-		System.out.println("json " + jsonParkingLots);
 		model.addAttribute("parkingLotsList", SFOParkingMetersList);
 		model.addAttribute("jsonParkingLots", jsonParkingLots);
 		return "/parkhere";

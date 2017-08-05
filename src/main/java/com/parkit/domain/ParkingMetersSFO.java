@@ -153,14 +153,4 @@ public class ParkingMetersSFO {
 	public void setLocation(String location) {
 		this.location = location;
 	}
-
-	
-	
-
-
-	
-
-	
-	
-	
 }

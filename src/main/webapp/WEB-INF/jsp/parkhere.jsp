@@ -68,38 +68,38 @@
 		</div>
 		</div>
 <script>
+var parkingLots = JSON.parse('${jsonParkingLots}');
   function myMap() {
 	  var map = new google.maps.Map(document.getElementById("googleMap"), {
 			zoom: 16,
 			center: {lat:37.78229410000001, lng:-122.4158954}
 			//center: {lat:"{$lati}", lng:"{$lngi}"}
 		});
-	getParkingLotValues(map);
-/* var myCenter = new google.maps.LatLng("${lati}", "${lngi}");
-var mapProp = {center:myCenter, zoom:12, scrollwheel:false, draggable:false, mapTypeId:google.maps.MapTypeId.ROADMAP};
-var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
-var marker = new google.maps.Marker({position:myCenter});
-marker.setMap(map); */
+	
+	  
+getParkingLotValues(map);
+
+/*marker.setMap(map); */
 } 
 
 function getParkingLotValues(map) {
 	console.log(" Log ");
 	//console.log(${parkingLots});
-	console.lg('${jsonParkingLots}');
+	//console.log('${jsonParkingLots}');
 	//var newData=JSON.stringify(${parkingLots}); 
 	//var parkingLotObj = JSON.parse(newData);
 	var parkingLotObj = JSON.parse('${jsonParkingLots}');
+	console.log(parkingLotObj.parkingPlaces[0]);
 	var image = 'https://maps.google.com/mapfiles/kml/shapes/parking_lot_maps.png';
 	
 	for(var i in parkingLotObj.parkingPlaces) {
-		console.log(parkingLotObj.parkingPlaces[i].name + " lat " + parkingLotObj.parkingPlaces[i].lat);
+		console.log(i + " " + parkingLotObj.parkingPlaces[i].streetName + " lat " + parkingLotObj.parkingPlaces[i].lat);
 		console.log(parkingLotObj.parkingPlaces[i].lat + " " + parkingLotObj.parkingPlaces[i].lng + " (types: " + (typeof parkingLotObj.parkingPlaces[i].lat) + ", " + (typeof parkingLotObj.parkingPlaces[i].lng) + ")");
 		var floatLat = parseFloat(parkingLotObj.parkingPlaces[i].lat);
 		var floatLng = parseFloat(parkingLotObj.parkingPlaces[i].lng);
 		var marker = new google.maps.Marker({
 			 position: {lat: parkingLotObj.parkingPlaces[i].lat, lng: parkingLotObj.parkingPlaces[i].lng},
 			 map: map,
-			 //center: {lat:parkingLotObj.parkingPlaces[i].lat, lng:-parkingLotObj.parkingPlaces[i].lng}
 			 icon: image
 		 }); 
 	}
@@ -109,7 +109,6 @@ function getParkingLotValues(map) {
 
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?v=3&amp;key=AIzaSyD_yBCEbeHzr6T71GroPsjXsApSNfjEems&callback=myMap"></script>
-
 </div>
 	
 	

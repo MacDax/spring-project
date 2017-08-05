@@ -6,19 +6,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SFOParkingMetersList {
-	private List<ParkingMetersSFO> parkingPlaces;
+	private List<SFParkingMeter> parkingPlaces;
 
 	public SFOParkingMetersList() {
 		super();
 	}
 
-	public List<ParkingMetersSFO> getParkingPlaces() {
+	public List<SFParkingMeter> getParkingPlaces() {
 		return parkingPlaces;
 	}
 
-	public void setParkingPlaces(List<ParkingMetersSFO> parkingPlaces) {
+	public void setParkingPlaces(List<SFParkingMeter> parkingPlaces) {
 		this.parkingPlaces = parkingPlaces;
 	}
-	
 	
 }
